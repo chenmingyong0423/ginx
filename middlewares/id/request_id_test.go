@@ -19,6 +19,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/chenmingyong0423/ginx/internal/types"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -44,7 +46,7 @@ func TestRequestId(t *testing.T) {
 			name: "Header 里有 X-Request-ID 参数",
 			requestBuilder: func() *http.Request {
 				req, _ := http.NewRequest("GET", "/test", nil)
-				req.Header.Set(xRequestIDKey, "chenmingyong")
+				req.Header.Set(types.XRequestIDKey, "chenmingyong")
 				return req
 			},
 			validFunc: func(value string) bool {
@@ -66,7 +68,7 @@ func TestRequestId(t *testing.T) {
 			w := httptest.NewRecorder()
 			// 接口调用
 			engine.ServeHTTP(w, req)
-			assert.True(t, tc.validFunc(w.Header().Get(xRequestIDKey)))
+			assert.True(t, tc.validFunc(w.Header().Get(types.XRequestIDKey)))
 		})
 	}
 }
