@@ -40,27 +40,7 @@ func (w *Response) WriteString(s string) (int, error) {
 	return w.ResponseWriter.WriteString(s)
 }
 
-type LogConfig struct {
+type LoggerConfig struct {
 	Level          slog.Level `opt:"-"`
 	OptionalLogger *slog.Logger
-}
-
-type LogConfigOption func(*LogConfig)
-
-func NewLogConfig(level slog.Level, opts ...LogConfigOption) *LogConfig {
-	logConfig := &LogConfig{
-		Level: level,
-	}
-
-	for _, opt := range opts {
-		opt(logConfig)
-	}
-
-	return logConfig
-}
-
-func WithOptionalLogger(optionalLogger *slog.Logger) LogConfigOption {
-	return func(logConfig *LogConfig) {
-		logConfig.OptionalLogger = optionalLogger
-	}
 }

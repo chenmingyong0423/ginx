@@ -24,9 +24,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type ConfigOption func(config *types.LoggerConfig)
+
+func NewLoggerConfig(level slog.Level, opts ...ConfigOption) *types.LoggerConfig {
+	LoggerConfig := &types.LoggerConfig{
+		Level: level,
+	}
+
+	for _, opt := range opts {
+		opt(LoggerConfig)
+	}
+
+	return LoggerConfig
+}
+
+func WithOptionalLogger(optionalLogger *slog.Logger) ConfigOption {
+	return func(LoggerConfig *types.LoggerConfig) {
+		LoggerConfig.OptionalLogger = optionalLogger
+	}
+}
+
 // RequestLogger 用于打印每个请求的详细信息
 // 默认使用 slog 库提供的默认实例进行打印，也可以传入一个 logger 实例
-func RequestLogger(opt types.LogConfig) gin.HandlerFunc {
+func RequestLogger(opt types.LoggerConfig) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		logger := slog.Default()
 		if opt.OptionalLogger != nil {
