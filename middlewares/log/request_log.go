@@ -24,22 +24,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Option struct {
-	level          slog.Level
-	optionalLogger *slog.Logger
-}
-
 // RequestLogger 用于打印每个请求的详细信息
-func RequestLogger(opt Option) gin.HandlerFunc {
+// 默认使用 slog 库提供的默认实例进行打印，也可以传入一个 logger 实例
+func RequestLogger(opt types.LogConfig) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		logger := slog.Default()
-		if opt.optionalLogger != nil {
-			logger = opt.optionalLogger
+		if opt.OptionalLogger != nil {
+			logger = opt.OptionalLogger
 		}
 		rid := ctx.GetHeader(types.XRequestIDKey)
 		start := time.Now()
 
-		logRequest(ctx, logger, opt.level, rid)
+		logRequest(ctx, logger, opt.Level, rid)
 
 		mr := &types.Response{
 			Body:           bytes.NewBufferString(""),
@@ -49,7 +45,7 @@ func RequestLogger(opt Option) gin.HandlerFunc {
 
 		ctx.Next()
 
-		logResponse(ctx, start, logger, opt.level, mr.Body.String(), rid)
+		logResponse(ctx, start, logger, opt.Level, mr.Body.String(), rid)
 	}
 }
 

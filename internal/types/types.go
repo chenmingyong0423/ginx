@@ -16,6 +16,7 @@ package types
 
 import (
 	"bytes"
+	"log/slog"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,4 +38,29 @@ func (w *Response) Write(b []byte) (int, error) {
 func (w *Response) WriteString(s string) (int, error) {
 	w.Body.WriteString(s)
 	return w.ResponseWriter.WriteString(s)
+}
+
+type LogConfig struct {
+	Level          slog.Level `opt:"-"`
+	OptionalLogger *slog.Logger
+}
+
+type LogConfigOption func(*LogConfig)
+
+func NewLogConfig(level slog.Level, opts ...LogConfigOption) *LogConfig {
+	logConfig := &LogConfig{
+		Level: level,
+	}
+
+	for _, opt := range opts {
+		opt(logConfig)
+	}
+
+	return logConfig
+}
+
+func WithOptionalLogger(optionalLogger *slog.Logger) LogConfigOption {
+	return func(logConfig *LogConfig) {
+		logConfig.OptionalLogger = optionalLogger
+	}
 }
