@@ -108,3 +108,9 @@ func WithSkipPaths(skipPaths []string) LoggerConfigOption {
 		loggerConfig.SkipPaths = skipPaths
 	}
 }
+
+func WithSkipFunc(skipFunc func(ctx *gin.Context) bool) LoggerConfigOption {
+	return func(loggerConfig *types.LoggerConfig) {
+		loggerConfig.SkipFunc = skipFunc
+	}
+}
