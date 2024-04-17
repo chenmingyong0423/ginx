@@ -40,7 +40,9 @@ func (w *Response) WriteString(s string) (int, error) {
 	return w.ResponseWriter.WriteString(s)
 }
 
+//go:generate optioner -type LoggerConfig -output ../../middlewares/log/request_log.go -mode append
 type LoggerConfig struct {
 	Level          slog.Level `opt:"-"`
 	OptionalLogger *slog.Logger
+	SkipPaths      []string
 }
