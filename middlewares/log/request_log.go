@@ -62,7 +62,7 @@ func RequestLogger(opt types.LoggerConfig) gin.HandlerFunc {
 
 		ctx.Next()
 
-		if _, ok := skip[path]; !ok {
+		if _, ok := skip[path]; !ok && (opt.SkipFunc == nil || !opt.SkipFunc(ctx)) {
 			logResponse(ctx, start, logger, opt.Level, mr.Body.String(), rid)
 		}
 	}

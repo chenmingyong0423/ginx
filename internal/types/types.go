@@ -45,4 +45,5 @@ type LoggerConfig struct {
 	Level          slog.Level `opt:"-"`
 	OptionalLogger *slog.Logger
 	SkipPaths      []string
+	SkipFunc       func(ctx *gin.Context) bool
 }
